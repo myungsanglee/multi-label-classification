@@ -1,6 +1,10 @@
 # ignore folder
 .idea/
 __pycache__/
+logs/
 
 # ignore file
 *.h5
+*.txt
+*.csv
+*.npy
