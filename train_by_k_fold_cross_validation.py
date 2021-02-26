@@ -7,7 +7,7 @@ import datetime
 import os
 from sklearn.model_selection import KFold
 from glob import glob
-from model import getMultiLabelResNet50V2_01, getMultiLabelEfficientNetB5_01
+from model import getMultiLabelResNet50V2_01, getMultiLabelResNet50V2_02, getMultiLabelResNet50V2_03
 from generator import DirtyMnistGeneratorV2
 import numpy as np
 from send_mail import sendMail
@@ -44,7 +44,7 @@ def main():
         #######################################################
         input_shape = (256, 256, 1)
         num_classes = 26
-        batch_size = 64
+        batch_size = 128
         lr = 0.001
         epoch = 200
         strategy = tf.distribute.MirroredStrategy()
@@ -53,13 +53,13 @@ def main():
         # Set parameters
         #######################################################
         # model list parameter
-        model_list = [getMultiLabelEfficientNetB5_01, getMultiLabelResNet50V2_01]
+        model_list = [getMultiLabelResNet50V2_01, getMultiLabelResNet50V2_02, getMultiLabelResNet50V2_03]
 
         # Set StratifiedKFold
         kfold = KFold(n_splits=5, shuffle=True, random_state=0)
 
         # parameters
-        model_name_list = ['EfficientNetB5_01', 'ResNet50V2_01']
+        model_name_list = ['ResNet50V2_01', 'ResNet50V2_02', 'ResNet50V2_03']
 
         #######################################################
         # Training
