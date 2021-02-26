@@ -20,3 +20,7 @@ print(mean)
 model_name = 'Resnet50_01'
 csv_file_path = './' + model_name + '.csv'
 print(csv_file_path)
+
+import os
+basename = os.path.basename('./djfkjf/dlksajflk/dslkafjlk/tst.cvs')
+print(basename)

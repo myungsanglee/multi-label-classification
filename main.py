@@ -64,8 +64,8 @@ log_dir = os.path.join(
 #######################################################
 # Get generator
 #######################################################
-train_x = np.load('./train_x.npy')
-train_y = np.load('./train_y.npy')
+train_x = np.load('data_array_gray/train_x.npy')
+train_y = np.load('data_array_gray/train_y.npy')
 # train_generator = PassengerFaceGenerator(train_x, train_y, input_shape, num_classes, batch_size, augment=True, shuffle=True)
 # val_generator = PassengerFaceGenerator(val_x, val_y, input_shape, num_classes, batch_size, augment=False, shuffle=False)
 # train_generator = DirtyMnistGeneratorV1(train_png_path, dirty_mnist_answer, input_shape, num_classes, batch_size, augment=False, shuffle=False)
