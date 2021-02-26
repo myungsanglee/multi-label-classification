@@ -390,8 +390,8 @@ if __name__ == '__main__':
     # model = getMultiLabelResNet50_08(input_shape, num_labels)
     # model = getMultiLabelResNet50_09(input_shape, num_labels)
     # model = getMultiLabelResNet50_10(input_shape, num_labels)
-    # model = getMultiLabelResNet50V2_01(input_shape, num_labels)
-    model = getMultiLabelEfficientNetB5_01(input_shape, num_labels)
+    model = getMultiLabelResNet50V2_01(input_shape, num_labels)
+    # model = getMultiLabelEfficientNetB5_01(input_shape, num_labels)
     # model = keras.models.load_model('./saved_models/EfficientNetB7/test_1/EfficientNetB7-1-fold-00046.h5')
     model.summary()
 

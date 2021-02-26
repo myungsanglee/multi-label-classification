@@ -9,9 +9,7 @@ from sklearn.model_selection import KFold
 from glob import glob
 from model import getMultiLabelResNet50V2_01, getMultiLabelEfficientNetB5_01
 from generator import DirtyMnistGeneratorV2
-import pandas as pd
 import numpy as np
-from tqdm import tqdm
 from send_mail import sendMail
 from checkAccuracy import getResultOfTest
 import traceback
@@ -55,13 +53,13 @@ def main():
         # Set parameters
         #######################################################
         # model list parameter
-        model_list = [getMultiLabelResNet50V2_01, getMultiLabelEfficientNetB5_01]
+        model_list = [getMultiLabelEfficientNetB5_01, getMultiLabelResNet50V2_01]
 
         # Set StratifiedKFold
         kfold = KFold(n_splits=5, shuffle=True, random_state=0)
 
         # parameters
-        model_name_list = ['ResNet50V2_01', 'EfficientNetB5_01']
+        model_name_list = ['EfficientNetB5_01', 'ResNet50V2_01']
 
         #######################################################
         # Training
@@ -97,7 +95,7 @@ def main():
                 # Set callbacks
                 log_dir = os.path.join(
                     "logs", "fit",
-                    datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '-' + model_name + '-' + str(fold_index + 1) + '-fold',
+                    datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '-' + m_name,
                 )
 
                 reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss',
@@ -143,8 +141,7 @@ def main():
                               validation_data=val_generator,
                               max_queue_size=10,
                               workers=1,
-                              use_multiprocessing=False
-                              )
+                              use_multiprocessing=False)
 
                     # Append best model path
                     best_model = glob(save_model_path + '/*')
