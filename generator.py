@@ -115,8 +115,11 @@ class DirtyMnistGeneratorV2(keras.utils.Sequence):
         data = self.data[indexes]
         label = self.label[indexes]
 
+        # print(data[0][0][:5])
+
         if self.augment:
             data = self.augmenter(data)
+            # print(data[0][0][:5])
         data = data.astype(np.float32) / 255.
 
         return data, label
@@ -124,24 +127,25 @@ class DirtyMnistGeneratorV2(keras.utils.Sequence):
     def augmenter(self, images):
         seq = iaa.Sequential(
             [
-                iaa.SomeOf((0, 2),
+                iaa.SomeOf((2, 8),  # Apply 1 to <max> given augmenters
+                # iaa.SomeOf(1,  # Apply 1 of given augmenters
                            [
-                               iaa.Identity(),
-                               # iaa.Rotate(),
-                               iaa.Solarize(threshold=(0, 5)),
-                               iaa.Sharpen(alpha=(0.9, 1.), lightness=1),
+                               iaa.Identity(),  # no change
+                               iaa.Solarize(threshold=0),  # inverts all pixel values above a threshold
+                               iaa.Sharpen(),  # Sharpen images and alpha-blend the result with the original input images
                                iaa.HistogramEqualization(),
-                               # iaa.TranslateX(),
-                               # iaa.Posterize(),
-                               # iaa.GammaContrast(),
-                               # iaa.ShearX(),
-                               # iaa.TranslateY(),
+                               iaa.TranslateX(percent=(-0.1, 0.1)),
+                               iaa.TranslateY(percent=(-0.1, 0.1)),
+                               iaa.ScaleX(scale=(0.7, 1.3)),
+                               iaa.ScaleY(scale=(0.7, 1.3)),
+                               iaa.ShearX(shear=(-20, 20)),
+                               iaa.ShearY(shear=(-20, 20)),
+                               iaa.Posterize(nb_bits=(1, 8)),
+                               iaa.GammaContrast(gamma=(0.5, 2.0)),
+                               iaa.Rotate(rotate=(-90, 90)),
+                               iaa.Rot90(k=(2, 3)),
                                # iaa.MultiplyHueAndSaturation(),
                                # iaa.MultiplyAndAddToBrightness(),
-                               # iaa.ShearY(),
-                               # iaa.ScaleX()
-                               # iaa.ScaleY()
-                               iaa.Rot90(k=(1, 3))
                            ]
                            )
             ]
@@ -192,16 +196,20 @@ if __name__ == '__main__':
 
     batch_size = 32
     train_generator = DirtyMnistGeneratorV2(train_x, train_y, batch_size, augment=True, shuffle=False)
+    test_generator = DirtyMnistGeneratorV2(train_x, train_y, batch_size, augment=False, shuffle=False)
 
     for i in range(train_generator.__len__()):
         x, y = train_generator.__getitem__(i)
+        test_x, test_y = test_generator.__getitem__(i)
         print(x.shape, x.dtype)
         print(y.shape, y.dtype)
         flag = False
         for j in range(batch_size):
+            orig_img = test_x[j]
             img = x[j]
             label = y[j]
             print('label: {}'.format(label))
+            cv2.imshow('origin', orig_img)
             cv2.imshow('Test', img)
             key = cv2.waitKey(0)
             if key == 27:
@@ -210,3 +218,6 @@ if __name__ == '__main__':
 
         if flag:
             break
+
+
+

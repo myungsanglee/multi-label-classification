@@ -129,23 +129,22 @@ def getResultOfTest(model_list, save_path):
 if __name__=='__main__':
     # Get model list
     model_list = []
-    # folder_list = glob('./saved_models/ResNet50_05/*')
-    # folder_list = sorted(folder_list)
-    # print(folder_list)
-    # for folder in folder_list[:]:
-    #     models = glob(folder + '/*')
-    #     models = sorted(models)
-    #     if len(models) != 0:
-    #         model_list.append(models[-1])
-    # print(model_list)
-
-    model_path = glob('./saved_models/ResNet50_01/9/*')
-    model_path = sorted(model_path)
-    model_path = model_path[-1]
-    print(model_path)
-    model_list.append(model_path)
+    folder_list = glob('./saved_models/ResNet50_11/*')
+    folder_list = sorted(folder_list)
+    print(folder_list)
+    for folder in folder_list[:]:
+        models = glob(folder + '/*')
+        models = sorted(models)
+        if len(models) != 0:
+            model_list.append(models[-1])
+    print(model_list)
+    # model_path = glob('./saved_models/ResNet50_01/9/*')
+    # model_path = sorted(model_path)
+    # model_path = model_path[-1]
+    # print(model_path)
+    # model_list.append(model_path)
     # Set save path
-    save_path = 'csv_file/ResNet50_01_9.csv'
+    save_path = 'csv_file/ResNet50_11_3fold.csv'
 
 
     # Get result

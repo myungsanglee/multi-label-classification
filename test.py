@@ -1,26 +1,24 @@
 import numpy as np
 import pandas as pd
-
-a = np.array([[1, 1, 1, 1], [1, 1, 1, 1]])
-b = np.array([[2, 2, 2, 2], [2, 2, 2, 2]])
-a = np.expand_dims(a, axis=-1)
-b = np.expand_dims(b, axis=-1)
-c = []
-c.append(a)
-c.append(b)
-print(c)
-array = np.concatenate(c, axis=2)
-print(array)
-mean = array.mean(axis=2)
-print(mean)
-
-mean = (mean > 1) * 1
-print(mean)
-
-model_name = 'Resnet50_01'
-csv_file_path = './' + model_name + '.csv'
-print(csv_file_path)
-
 import os
-basename = os.path.basename('./djfkjf/dlksajflk/dslkafjlk/tst.cvs')
-print(basename)
+from tensorflow import keras
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = ''
+
+# model = keras.models.load_model('./saved_models/ResNet50_01_test/1/ResNet50_01-1-fold-00042.h5')
+model = keras.models.load_model('./saved_models/ResNet50_01/1/ResNet50_01-1-fold-00118.h5')
+model.summary()
+
+# Get data
+train_x = np.load('./data_array_gray/train_x.npy')
+train_y = np.load('./data_array_gray/train_y.npy')
+
+train_num = int(len(train_x) * 0.8)
+data_index = np.arange(len(train_x))
+np.random.seed(0)
+np.random.shuffle(data_index)
+train_index = data_index[:train_num]
+val_index = data_index[train_num:]
+print(train_index, len(train_index))
+print(val_index, len(val_index))

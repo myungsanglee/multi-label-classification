@@ -7,7 +7,7 @@ import datetime
 import os
 from sklearn.model_selection import KFold
 from glob import glob
-from model import getMultiLabelResNet50V2_01, getMultiLabelResNet50V2_02, getMultiLabelResNet50V2_03
+from model import getMultiLabelVGG16_01, getMultiLabelVGG16_02, getMultiLabelVGG16_03, getMultiLabelVGG16_04
 from generator import DirtyMnistGeneratorV2
 import numpy as np
 from send_mail import sendMail
@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.ERROR)
 # Set GPU
 #######################################################
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = '0,1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 #######################################################
 # Set Memory
@@ -46,20 +46,20 @@ def main():
         num_classes = 26
         batch_size = 128
         lr = 0.001
-        epoch = 200
-        strategy = tf.distribute.MirroredStrategy()
+        epoch = 1000
+        # strategy = tf.distribute.MirroredStrategy()
 
         #######################################################
         # Set parameters
         #######################################################
         # model list parameter
-        model_list = [getMultiLabelResNet50V2_01, getMultiLabelResNet50V2_02, getMultiLabelResNet50V2_03]
+        model_list = [getMultiLabelVGG16_01, getMultiLabelVGG16_02, getMultiLabelVGG16_03, getMultiLabelVGG16_04]
 
         # Set StratifiedKFold
         kfold = KFold(n_splits=5, shuffle=True, random_state=0)
 
         # parameters
-        model_name_list = ['ResNet50V2_01', 'ResNet50V2_02', 'ResNet50V2_03']
+        model_name_list = ['VGG16_01', 'VGG16_02', 'VGG16_03', 'VGG16_04']
 
         #######################################################
         # Training
@@ -81,6 +81,12 @@ def main():
 
                 save_model_path = './saved_models/' + model_name + '/' + str(fold_index + 1)
                 m_name = model_name + '-' + str(fold_index + 1) + '-fold'
+
+                # if fold_index < 3:
+                #     best_model = glob(save_model_path + '/*')
+                #     best_model = sorted(best_model)
+                #     best_models.append(best_model[-1])
+                #     continue
 
                 # Set train dataset
                 train_data_x = train_x[train_index]
@@ -123,15 +129,15 @@ def main():
 
                 try:
                     # Compile Model
-                    with strategy.scope():
-                        # Get model
-                        model = model_function(input_shape, num_classes)
-                        model.summary()
+                    # with strategy.scope():
+                    # Get model
+                    model = model_function(input_shape, num_classes)
+                    model.summary()
 
-                        # Compile Model
-                        model.compile(optimizer=keras.optimizers.Adam(learning_rate=lr),
-                                      loss=keras.losses.binary_crossentropy,
-                                      metrics=['accuracy'])
+                    # Compile Model
+                    model.compile(optimizer=keras.optimizers.Adam(learning_rate=lr),
+                                  loss=keras.losses.binary_crossentropy,
+                                  metrics=['accuracy'])
 
                     # Train Model
                     model.fit(x=train_generator,
@@ -200,6 +206,7 @@ def main():
         sendMail(subject='main 함수 에러 발생',
                  contents=traceback.format_exc()
                  )
+
 
 if __name__ == '__main__':
     main()
